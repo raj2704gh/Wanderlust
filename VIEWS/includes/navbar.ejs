@@ -1,0 +1,159 @@
+
+<style>
+  .search-btn{
+    background-color:#fe424d ;
+    color:#fff;
+    border-radius: 25px;
+    padding: 0 1rem 0 1rem;
+  }
+  .search-btn:hover{
+    background-color:#fe424d ;
+    color:#fff;
+  }
+  .search-btn i{
+    display:inline;
+    margin-right: 0.5rem;
+    font-size: 1rem;
+    
+  }
+
+  .search-inp{
+    border-radius: 25px;
+    padding: 0.5rem 3rem 0.5rem 3rem;
+  }
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    margin-top: 3rem;
+    border-radius: 25px;
+    min-width: 280px;
+    padding: 0.5rem 3rem 0.2rem 3rem;
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+    z-index: 1;
+  }
+  
+</style>
+
+<nav class="navbar  sticky-top navbar-expand-md bg-body-light  border-bottom">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/listing"><i class="fa-regular fa-compass"></i></a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+
+        <div class="navbar-nav">
+          <a class="nav-link Explore" href="/listing">Explore</a>
+        </div>
+
+        <div class="navbar-nav ms-auto">
+          <form class="d-flex" role="search">
+            <input class="form-control me-2 search-inp" id="search-box" type="search" placeholder="Search destination" aria-label="Search">
+
+            <div id="printSuggetions" class="dropdown-content" style=""> </div>
+
+            <form id="next" method="get" action="/suggestion">
+               
+            </form>
+            <button class="btn btn-search  search-btn" type="submit"><i class="fa-solid fa-magnifying-glass"></i>Search</button>
+          </form>
+        </div>
+        
+        <div class="navbar-nav ms-auto ">
+          <a class="nav-link" href="/listing/new">Add new Listings</a>
+          <%if(!currUser) {%>
+          <a class="nav-link active" aria-current="page" href="/signup"><b>SignUp</b></a>
+          <a class="nav-link" href="/login"><b>Login</b></a>
+          <%}else{%>
+          <a class="nav-link" href="/logout"><b>Logout</b></a>
+          <% } %>
+        </div>
+      </div>
+    </div>
+    
+  </nav>
+<!--   
+  <script>
+     
+  </script> -->
+  
+<script>
+   
+   let input = document.getElementById("search-box");
+    input.addEventListener("input", () => {
+      let search_string = input.value.toLowerCase();
+      console.log("search string",search_string);
+      
+      //console.log(list);
+      
+   // Make AJAX request to fetch listings based on search query
+   fetch('/listing/ajax')
+   .then((res)=>{
+    return res.json();
+   })
+   .then((data)=>{
+    let suggestion = document.getElementById("printSuggetions");
+      suggestion.innerHTML = "";
+     data.forEach((obj)=>{
+      console.log(obj.country);
+      if(obj.country.toLowerCase().includes(search_string)){
+        var link = document.createElement("p"); 
+        link.style=""
+        link.textContent = obj.title;
+        link.addEventListener("click", function(event) {
+                        event.preventDefault();
+                        console.log("Redirect to listing page for: " + listing.title);
+                        // Redirect to the listing page
+                    });
+        suggestion.appendChild(link);
+      }
+     });
+     
+            if (suggestion.innerHTML !== "") {
+                suggestion.style.display = "block";
+            } else {
+                suggestion.style.display = "none";
+           }
+          })
+     .catch(error => console.error(error));
+});
+
+document.getElementById("searchBtn").addEventListener("click", function(event) {
+   event.preventDefault();
+   var searchInput = document.getElementById("searchInput").value.toLowerCase();
+   console.log("Search for: " + searchInput);
+   // Perform search action, such as filtering listings based on the search input
+});
+  
+      //  .then(response => response.json())
+      //  .then(listings => {
+      //      var suggestions = document.getElementById("printSuggetions");
+      //      suggestions.innerHTML = '';
+
+      //      listings.forEach(function(listing) {
+      //          if (listing.country.toLowerCase().includes(searchInput)) {
+      //              var link = document.createElement("p");
+      //              link.textContent = listing.title;
+      //              link.addEventListener("click", function(event) {
+      //                  event.preventDefault();
+      //                  console.log("Redirect to listing page for: " + listing.title);
+      //                  // Redirect to the listing page
+      //              });
+      //              suggestions.appendChild(link);
+      //          }
+      //      });
+
+      //      if (suggestions.innerHTML !== "") {
+      //          suggestions.style.display = "block";
+      //      } else {
+      //          suggestions.style.display = "none";
+      // //      }
+      //  })
+       
+
+</script>
+  
+
+    
+   
